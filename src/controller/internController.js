@@ -50,7 +50,11 @@ const createIntern = async function (req, res) {
         if (!(/^([+]\d{2})?\d{10}$/.test(requestBody.mobile))) {
             return res.status(400).send({ status: false, msg: 'please provide a valid moblie Number' })
         }
+        let duplicateMobile  = await internModel.findOne({mobile:requestBody.mobile})
 
+        if(duplicateMobile){
+            return res.status(400).send({ status:false, msg: 'mobile already exists'})
+        }
         let college = await collegeModel.findById(collegeid)
         console.log(college)
         if (!college) { return res.status(400).send({ status: false, msg: "college not found" }) }
